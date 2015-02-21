@@ -1,0 +1,43 @@
+  0x000:              | .pos 0
+  0x000:              | init:
+  0x000: 30f500010000 | irmovl Stack,%ebp
+  0x006: 30f400010000 | irmovl Stack,%esp
+  0x00c: 8012000000   | call Main 
+  0x011: 00           | halt
+                      | 
+  0x012:              | Main:
+  0x012: a05f         | pushl %ebp
+  0x014: 2045         | rrmovl %esp,%ebp
+  0x016: 30f103000000 | irmovl $3,%ecx
+  0x01c: a01f         | pushl %ecx
+  0x01e: 8028000000   | call rfac
+  0x023: 2054         | rrmovl %ebp,%esp
+  0x025: b05f         | popl %ebp
+  0x027: 90           | ret
+                      | 
+  0x028:              | rfac:
+  0x028: a05f         | pushl %ebp
+  0x02a: 2045         | rrmovl %esp,%ebp
+  0x02c: a03f         | pushl %ebx
+  0x02e: 30f104000000 | irmovl $4,%ecx
+  0x034: 6114         | subl %ecx,%esp
+  0x036: 503508000000 | mrmovl 8(%ebp),%ebx
+  0x03c: 30f001000000 | irmovl $1,%eax
+  0x042: 6103         | subl %eax,%ebx
+  0x044: 7158000000   | jle End
+  0x049: 2030         | rrmovl %ebx,%eax
+  0x04b: 400400000000 | rmmovl %eax,(%esp)
+  0x051: 8028000000   | call rfac
+  0x056: 6030         | addl %ebx,%eax
+                      | 
+                      | 
+  0x058:              | End:
+  0x058: 30f104000000 | irmovl $4,%ecx
+  0x05e: 6014         | addl %ecx,%esp
+  0x060: b03f         | popl %ebx
+  0x062: b05f         | popl %ebp
+  0x064: 90           | ret
+                      | 
+                      | 
+  0x100:              | .pos 0x100
+  0x100:              | Stack:

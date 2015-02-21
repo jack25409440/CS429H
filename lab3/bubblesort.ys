@@ -1,0 +1,76 @@
+#Author: Xiaohui Chen
+#eid:xc2388
+
+      .pos0
+init: irmovl Stack,%ebp
+        irmovl Stack,%esp
+        call Main
+        halt
+
+        .align 4
+array:  .long 0x8
+            .long 0xa
+            .long 0x6
+            .long 0x7
+            .long 0x9
+            .long 0x3
+            .long 0x4
+            .long 0x1
+            .long 0x5
+            .long 0x2
+
+Main:   pushl %ebp
+            rrmovl %esp, %ebp
+            irmovl $10,%eax
+            pushl %eax
+            irmovl array,%edx
+            pushl %edx
+            call Bubble
+            rrmovl %ebp,%esp
+            popl %ebp
+            ret
+
+Bubble:  pushl %ebp
+              rrmovl %esp,%ebp
+              mrmovl 8(%ebp),%ebx                     #get array
+              mrmovl 12(%ebp),%eax                    #get count
+              irmovl $1,%ecx
+              subl %ecx,%eax                          #last=count-1
+              jle End
+
+Loop:  irmovl $0,%edx                                 #set i
+           rrmovl %eax,%ecx
+           subl %edx,%ecx
+           jle End1
+
+Loop11:  irmovl $0,%ecx
+         addl %edx,%ecx
+         addl %ecx,%ecx
+         addl %ecx,%ecx                               # i*4
+         addl %ecx,%ebx
+         mrmovl (%ebx),%esi
+         mrmovl 4(%ebx), %edi
+         subl %edi,%esi
+         jle  Loop12
+
+Swap:     addl %edi,%esi
+          rmmovl %edi,(%ebx)
+          rmmovl %esi,4(%ebx)
+
+Loop12:        mrmovl 8(%ebp),%ebx        #restore pointer
+               irmovl $1,%ecx
+               addl %ecx,%edx             #i++
+               rrmovl %edx,%ecx
+               subl %eax,%ecx
+               jl Loop11
+
+End1:         irmovl $1,%ecx
+              subl %ecx,%eax
+              jg Loop
+            
+End:      rrmovl %ebp,%esp
+          popl %ebp
+          ret
+
+         .pos 0x400
+Stack:

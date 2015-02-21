@@ -1,0 +1,43 @@
+.pos 0
+init:
+irmovl Stack,%ebp
+irmovl Stack,%esp
+call Main 
+halt
+
+Main:
+pushl %ebp
+rrmovl %esp,%ebp
+irmovl $3,%ecx
+pushl %ecx
+call rfac
+rrmovl %ebp,%esp
+popl %ebp
+ret
+
+rfac:
+pushl %ebp
+rrmovl %esp,%ebp
+pushl %ebx
+irmovl $4,%ecx
+subl %ecx,%esp
+mrmovl 8(%ebp),%ebx
+irmovl $1,%eax
+subl %eax,%ebx
+jle End
+rrmovl %ebx,%eax
+rmmovl %eax,(%esp)
+call rfac
+addl %ebx,%eax
+
+
+End:
+irmovl $4,%ecx
+addl %ecx,%esp
+popl %ebx
+popl %ebp
+ret
+
+
+.pos 0x100
+Stack:

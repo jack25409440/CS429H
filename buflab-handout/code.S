@@ -1,0 +1,4 @@
+mov $0x5971ea71,%eax
+push $0x08048dd6
+movl   $0xdeadbeef,-0xc(%ebp)
+ret

@@ -1,0 +1,86 @@
+#Author: Xiaohui Chen
+#eid:xc2388
+
+.pos 0
+init:
+irmovl Stack,%ebp
+irmovl Stack,%esp
+call Main
+halt
+.align 4
+src:
+    .long 0x00a
+    .long 0x0b0
+    .long 0xc00
+
+dest:
+    .long 0x111
+    .long 0x222
+    .long 0x333
+
+Main:
+pushl %ebp
+rrmovl %esp,%ebp
+irmovl src,%ebx
+irmovl dest,%ecx
+mrmovl (%ecx),%esi
+irmovl $3,%edx
+pushl %edx
+pushl %esi
+pushl %ebx
+call Copy
+irmovl src,%ebx
+irmovl dest,%ecx
+#irmovl $4,%edi
+#addl %edi,%ecx
+mrmovl 4(%ecx),%esi
+irmovl $3,%edx
+pushl %edx
+pushl %esi
+pushl %ebx
+call Copy
+irmovl src,%ebx
+irmovl dest,%ecx
+#irmovl $4,%edi
+#addl %edi,%ecx
+mrmovl 8(%ecx),%esi
+irmovl $3,%edx
+pushl %edx
+pushl %esi
+pushl %ebx
+call Copy
+
+rrmovl %ebp,%esp
+popl %ebp
+ret
+
+Copy:
+pushl %ebp
+rrmovl %esp,%ebp
+irmovl $0,%eax
+mrmovl 8(%ebp),%ebx   #get src
+mrmovl 12(%ebp),%ecx  #get dest
+mrmovl 16(%ebp),%edx  #get length
+irmovl $0,%edi
+addl %edi,%edx
+jle End
+
+Loop:
+mrmovl (%ebx),%esi    #get val
+rmmovl %esi,(%ecx)
+irmovl $4,%edi
+addl %edi,%ebx
+addl %edi,%ecx
+irmovl $1,%edi
+xorl %esi,%eax
+subl %edi,%edx
+jg Loop
+
+End:
+rrmovl %ebp,%esp
+popl %ebp
+ret
+
+
+.pos 0x500
+Stack:
